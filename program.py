@@ -1,43 +1,114 @@
-import sys
 import random
-from PyQt6 import QtWidgets
-def countAttemps():
-    broski = int(input_text.text())
-    arr_results = []
-    for x in range(broski):
-        arr_results.append(random.randint(1, 6))
-    res_1 = str(round(arr_results.count(1) / broski * 100, 2))
-    res_2 = str(round(arr_results.count(2) / broski * 100, 2))
-    res_3 = str(round(arr_results.count(3) / broski * 100, 2))
-    res_4 = str(round(arr_results.count(4) / broski * 100, 2))
-    res_5 = str(round(arr_results.count(5) / broski * 100, 2))
-    res_6 = str(round(arr_results.count(6) / broski * 100, 2))
-    result.setText("<b>Вероятность выпадения 1 очка:</b> "+res_1+"<br><b>Вероятность выпадения 2 очка:</b> "+res_2+"<br><b>Вероятность выпадения 3 очка:</b> "+res_3+"<br><b>Вероятность выпадения 4 очка:</b> "+res_4+"<br><b>Вероятность выпадения 5 очка:</b> "+res_5+"<br><b>Вероятность выпадения 6 очка:</b> "+res_6)
-    label.hide()
-    input_text.hide()
-    btnSend.hide()
-    btnQuit.show()
-    input_text.setText("")
-    result.show()
-app = QtWidgets.QApplication(sys.argv)
-window = QtWidgets.QWidget()
-window.setWindowTitle("Статистика")
-window.resize(300, 70)
-label = QtWidgets.QLabel("<center>Сколько бросков надо произвести?</center>")
-input_text = QtWidgets.QLineEdit()
-btnSend = QtWidgets.QPushButton("Вычислить")
-btnQuit = QtWidgets.QPushButton("Закрыть")
-result = QtWidgets.QLabel("")
-vbox = QtWidgets.QVBoxLayout()
-vbox.addWidget(label)
-vbox.addWidget(input_text)
-vbox.addWidget(btnSend)
-vbox.addWidget(result)
-vbox.addWidget(btnQuit)
-result.hide()
-btnQuit.hide()
-window.setLayout(vbox)
-btnSend.clicked.connect(countAttemps)
-btnQuit.clicked.connect(app.quit)
+import sys
+from PyQt6.QtCore import QSize, Qt 
+from PyQt6.QtWidgets import QApplication,QListWidget , QMainWindow , QLabel,  QVBoxLayout, QGridLayout, QWidget, QLineEdit, QPushButton, QMessageBox
+
+class Window(QMainWindow):
+        def __init__(self):    
+            super().__init__()
+            self.setFixedSize(QSize(400,300))
+             
+            self.setWindowTitle("Вероятность выпадения ")
+            
+            but1=QPushButton(self)
+            but1.setText("Рассчитать вероятность  всех чисел")
+            but1.setFixedSize(222,25)
+            but1.move(0,0)
+            but1.setCheckable(True)
+            
+            but1.clicked.connect(self.the_button_was_toggled)
+            
+            info1=QLineEdit(self)
+            info1.setText("Колличество кубиков")
+            info1.setFixedSize(130,25)
+            info1.move(92,23)
+            info1.setDisabled(True)
+
+            self.vvod1=QLineEdit(self)
+            self.vvod1.setText("2")
+            self.vvod1.move(0,23)
+            self.vvod1.setFixedSize(92,25)
+
+            info2=QPushButton(self)
+            info2.setText("Колличество бросков")
+            info2.setFixedSize(130,25)
+            info2.move(92,46)
+            info2.setDisabled(True)
+            
+            self.vvod2=QLineEdit(self)
+            self.vvod2.setText("1")
+            self.vvod2.move(0,46)
+            self.vvod2.setFixedSize(92,25)
+            
+            self.rez = QListWidget(self)
+            self.rez.addItems(["Результат:"])
+            self.rez.move(0,70)
+            self.rez.setFixedSize(222,200)
+
+            but3=QPushButton(self)
+            but3.setText("Рассчитать для одного числа")
+            but3.setFixedSize(180,25)
+            but3.move(221,0)
+            but3.setCheckable(True)
+            
+            but3.clicked.connect(self.button3)
+
+            self.vvod3=QLineEdit(self)
+            self.vvod3.setText("3")
+            self.vvod3.move(221,24)
+            self.vvod3.setFixedSize(30,23)
+
+            self.rez2 = QListWidget(self)
+            self.rez2.addItems(["Результат:"])
+            self.rez2.move(251,24)
+            self.rez2.setFixedSize(149,60)
+
+        
+        def the_button_was_toggled(self):
+            
+            self.rez.clear()  
+            self.rez.addItems(["Результат:"])
+            cube=int(self.vvod1.text())
+            throw=int(self.vvod2.text())
+            
+            self.chisla=[]
+            for n in range(throw):
+                ch=0
+                for h in range(cube):
+                    x=random.randint(1,6)
+                    self.chisla.append(x)
+            ch=1
+            for x in range(6*(cube)):
+                    
+                a=self.chisla.count(ch)
+
+                rezult=str(ch)+"="+str(float(a/len(self.chisla)*100))+"%"
+                      
+                self.rez.addItem(str(rezult))
+
+
+
+
+
+                ch+=1
+        def button3(self):
+            ch=int(self.vvod3.text())
+            self.rez2.clear()
+            self.rez2.addItems(["Результат:"])
+            
+            
+
+                    
+            a=self.chisla.count(ch)
+
+            proc=str(ch)+"="+str(float(a/len(self.chisla)*100))+"%"
+                      
+            self.rez2.addItem(str(proc))
+            
+              
+app = QApplication(sys.argv)
+
+window=Window()
 window.show()
-sys.exit(app.exec())
+
+app.exec()
