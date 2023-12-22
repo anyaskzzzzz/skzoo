@@ -1,3 +1,5 @@
+#если добавить в папку файл с элементами таблицы менделеева, то код будет работать
+
 import sys
 import csv
 from PyQt6 import QtCore, QtWidgets, QtGui
